@@ -1,11 +1,12 @@
 // motion macro
 #define LEG_FORWARD 0b10000000
+#define LEG_BACK    0b11000000
+
 
 #include <string.h>
 #include "MyUDP.h"
 #include "MyServo.h"
 
-int f_flg = 0;
 int angle[20] = {0};
 int pwm_sw_val;
 
@@ -15,7 +16,7 @@ void setup() {
     Serial.begin(115200);
     //サーボモータ初期化
     servo_init();
-    if(udp_init(CL_MODE) != 0)
+    if(udp_init(AP_MODE) != 0)
     {
         Serial.println("connection failed...");
         while(1);
@@ -23,17 +24,7 @@ void setup() {
     pwm_test();
 }
 
-void forward(int flg)
-{
-    if(flg == 0)
-    {
-        servo_mdselect(0);
-        //左前　右中　左後を前へ
-    }else{
-        servo_mdselect(1);
-        //右前　左中　右後を前へ
-    }
-}
+
 
 void pwm_test()
 {
@@ -78,32 +69,15 @@ void loop() {
     char param[READ_SIZE];
     udp_rw(param);
     switch(param[0]){
-        case '1' :
-            angle[FRONT_LEG_R_1] += 10;
-            break;
-        case '2' :
-            angle[FRONT_LEG_R_1] -= 10;
-            break;
-        case '3' :
-            angle[FRONT_LEG_R_1] = 0;
-            break;
         case LEG_FORWARD :
-            forward(f_flg);
-            if(f_flg == 0)  f_flg = 1;
-            else            f_flg = 0;
+            forward();
+			break;
+		case LEG_BACK :
+			back();
             break;
         case 0 :
             break;
         default :
             angle[FRONT_LEG_R_1] =  50;
     }
-    if(angle[FRONT_LEG_R_1] > 90)
-    {
-        angle[0] = 90;
-    }
-    else if(angle[FRONT_LEG_R_1] < -90)
-    {
-        angle[FRONT_LEG_R_1] = -90;
-    }
-    servo_move(angle[FRONT_LEG_R_1], LEDC_CHANNEL_0);
 }

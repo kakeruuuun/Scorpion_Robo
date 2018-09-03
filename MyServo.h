@@ -1,9 +1,10 @@
 // servo parameter
 // サーボ信号の１サイクル 50Hz:20ms
 #define LEDC_SERVO_FREQ     50
-
 #define SERVO_MIN_WIDTH_MS  0.6
 #define SERVO_MAX_WIDTH_MS  2.4
+
+static int F_FLG = 0;
 
 // 端子番号 SERVO[0-19]
 const int SERVO[] = {15, //0
@@ -92,10 +93,6 @@ void servo_init()
     ledcSetup(LEDC_CHANNEL_13, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
     ledcSetup(LEDC_CHANNEL_14, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
     ledcSetup(LEDC_CHANNEL_15, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
-    ledcAttachPin(SERVO[16], LEDC_CHANNEL_3) ; // CH3をRC SERVOに
-
-    // RC SERVOの初期化
-    ledcSetup(LEDC_CHANNEL_4, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
     delay(1000);
 }
 
@@ -110,15 +107,34 @@ void servo_move(int param, int ch)
     ledcWrite(ch, servo_pwm_count(param)) ; 
 }
 
-void servo_mdselect(int mode)
+void forward()
 {
-    switch(mode)
+    if(F_FLG == 0)
     {
-        case 0 : 
-            ledcAttachPin(SERVO[16], LEDC_CHANNEL_3) ; // CH3をRC SERVOに
-            ledcAttachPin(SERVO[15], LEDC_CHANNEL_4) ; // CH4をRC SERVOに
-            break;
-       default :
-            break;
+		servo_move(20 , LEDC_CHANNEL_0);
     }
+	else
+	{
+		servo_move(-20, LEDC_CHANNEL_0);
+    }
+	delay(500);
+	
+	if(F_FLG == 0)  F_FLG = 1;
+	else            F_FLG = 0;
+}
+
+void back()
+{
+    if(F_FLG == 0)
+    {
+		servo_move(40 , LEDC_CHANNEL_0);
+    }
+	else
+	{
+		servo_move(-40, LEDC_CHANNEL_0);
+    }
+	delay(500);
+
+	if(F_FLG == 0)  F_FLG = 1;
+	else            F_FLG = 0;
 }
