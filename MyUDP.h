@@ -36,6 +36,7 @@ int udp_init()
     Serial.print("Local port: ");
     Serial.println(localPort);
     return 0;
+	
 }
 
 int udp_init(int md)
@@ -83,6 +84,7 @@ void udp_rw(char read_buf[]) {
 				udp.flush();
 			}
 			udp.endPacket();
+			Serial.print("size:");
 			Serial.println(PackektSize);
 			break;
 		}
