@@ -72,21 +72,19 @@ int udp_init(int md)
 void udp_rw(char read_buf[]) {
     int PackektSize;
     int i;
-	while(1)	//パケットが送られてくるまでループ
+	while(PackektSize = udp.parsePacket())	//パケットが送られてくるまでループ
 	{
-		if (PackektSize = udp.parsePacket()) {
-			remoteIP = udp.remoteIP();
-			udp.beginPacket(remoteIP, remotePort);
-			udp.read(read_buf, READ_SIZE);
+		remoteIP = udp.remoteIP();
+		udp.beginPacket(remoteIP, remotePort);
+		udp.read(read_buf, READ_SIZE);
 
-			for(i = 0; i < READ_SIZE;i++){
-				udp.write(read_buf[i]);
-				udp.flush();
-			}
-			udp.endPacket();
-			Serial.print("size:");
-			Serial.println(PackektSize);
-			break;
+		for(i = 0; i < READ_SIZE;i++){
+			udp.write(read_buf[i]);
+			udp.flush();
 		}
+		udp.endPacket();
+		//Serial.print("size:");
+		//Serial.println(PackektSize);
+		//break;
 	}
 }
