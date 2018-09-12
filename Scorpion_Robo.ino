@@ -17,51 +17,39 @@ void pwm_test();
 void setup() {
     Serial.begin(115200);
     //サーボモータ初期化
-    servo_init();
     if(udp_init(AP_MODE) != 0)
     {
         Serial.println("connection failed...");
         while(1);
     }
+    servo_init();
+	pwm_test();
 }
 
 void pwm_test()
 {
-    ledcAttachPin(SERVO[0], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[1], LEG_CR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[2], LEG_BR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[3], LEG_FL) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[4], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[5], LEG_CR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[6], LEG_BR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[7], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[8], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[9], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[10], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[11], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[12], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[13], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[14], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[15], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[16], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[17], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[18], LEG_FR) ; // CH3をRC SERVOに
-    ledcAttachPin(SERVO[19], LEG_FR) ; // CH3をRC SERVOに
-    servo_move(-90, LEG_FR);
-    servo_move(-75, LEG_FR);
-    servo_move(-60, LEG_FR);
-    servo_move(-45, LEG_FR);
-    servo_move(-30, LEG_FR);
-    servo_move(-15, LEG_FR);
-    servo_move(0, LEG_FR);
-    servo_move(15, LEG_FR);
-    servo_move(30, LEG_FR);
-    servo_move(45, LEG_FR);
-    servo_move(60, LEG_FR);
-    servo_move(75, LEG_FR);
-    servo_move(90, LEG_FR);
-    servo_move(50, LEG_FR);
-    servo_move(0, LEG_FR);
+    
+	servo_move(0, LEG_UP1);
+	delay(1000);
+	servo_move(0, LEG_UP2);
+	delay(1000);
+	servo_move(0, LEG_FL);
+	servo_move(0, LEG_CL);
+	servo_move(0, LEG_BL);
+	delay(1000);
+	servo_move(0, LEG_FR);
+	servo_move(0, LEG_CR);
+	servo_move(0, LEG_BR);
+	delay(1000);
+
+	servo_move(0, TAIL_1);
+	servo_move(0, TAIL_2);
+	servo_move(0, SCISSORS_L1);
+	servo_move(0, SCISSORS_L2);
+	servo_move(0, SCISSORS_R1);
+	servo_move(0, SCISSORS_R2);
+	
+	delay(1000);
 }
 
 void loop() {

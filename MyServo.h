@@ -8,26 +8,26 @@ static int F_FLG = 0;
 static int stretch_param = 0;
 
 // 端子番号 SERVO[0-19]
-const int SERVO[] = {15, //0
-                      2,  //1
-                      0,  //2
-                      4,  //3
-                      16, //4
-                      17, //5
-                      5,  //6
-                      18, //7
-                      19, //8
-                      21, //9
-                      22, //10
-                      23, //11
-                      32, //12
-                      33, //13
-                      25, //14
-                      26, //15
-                      27, //16
-                      14, //17
-                      12, //18
-                      13};//19
+const int SERVO[] = {18, //0 LEGUP1
+                     12, //1 LEGUP1
+                     16, //2 LEGUP1
+                     27, //3 LEGUP2
+                     17, //4 LEGUP2
+                     13, //5 LEGUP2
+                     26, //6 LEGFL
+                     14, //7 LEGCL
+                      0, //8 LEGBL
+                     19, //9 LEGFR
+                      5, //10 LEGCR
+                      4, //11 LEGBR
+                     15, //12 TAIL1
+                      2, //13 TAIL2
+                     33, //14 SCISSORS_L1
+                     32, //15 SCISSORS_L2
+                     22, //16 SCISSORS_R1
+                     23, //17 SCISSORS_R2
+                     21, //18 reserve
+                     25};//19 reserve
 
 // pwmチャンネル番号　0 - 15
 #define LEG_UP1			0
@@ -49,6 +49,17 @@ const int SERVO[] = {15, //0
 
 // 分解能 16bit
 #define LEDC_TIMER_16_BIT   16
+
+int servo_pwm_count(int v)
+{
+    float vv = (v + 90) / 180.0 ;
+    return (int)(65536 * (SERVO_MIN_WIDTH_MS + vv * (SERVO_MAX_WIDTH_MS - SERVO_MIN_WIDTH_MS)) / 20.0) ;
+}
+
+void servo_move(int param, int ch)
+{
+    ledcWrite(ch, servo_pwm_count(param)) ; 
+}
 
 void servo_init()
 {
@@ -89,17 +100,7 @@ void servo_init()
     ledcAttachPin(SERVO[16], SCISSORS_R1) ; // CH3をRC SERVOに
     ledcAttachPin(SERVO[17], SCISSORS_R2) ; // CH3をRC SERVOに
 	delay(1000);
-}
 
-int servo_pwm_count(int v)
-{
-    float vv = (v + 90) / 180.0 ;
-    return (int)(65536 * (SERVO_MIN_WIDTH_MS + vv * (SERVO_MAX_WIDTH_MS - SERVO_MIN_WIDTH_MS)) / 20.0) ;
-}
-
-void servo_move(int param, int ch)
-{
-    ledcWrite(ch, servo_pwm_count(param)) ; 
 }
 
 void forward()
