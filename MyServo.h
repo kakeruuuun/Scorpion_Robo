@@ -111,67 +111,60 @@ void forward()
     {
 		//足を上げる
 		servo_move(-40 + stretch_param, LEG_UP1);
-		delay(d_time);
+		delay(50);
 		//足を後ろに出す
 		servo_move(0, LEG_CL);
 		servo_move(0, LEG_FR);
 		servo_move(0, LEG_BR);
-		delay(d_time);
+		delay(50);
 		//足を前に出す
 		servo_move(0, LEG_CR);
 		servo_move(0, LEG_FL);
 		servo_move(0, LEG_BL);
-		//動き終わるまでディレイ
-		delay(d_time);
+		delay(50);
 
 		//足を後ろに出す
 		servo_move(-20, LEG_CL);
 		servo_move(20, LEG_FR);
 		servo_move(20, LEG_BR);
-		delay(d_time);
+		delay(50);
 		//足を前に出す
 		servo_move(-20, LEG_CR);
 		servo_move(20, LEG_FL);
 		servo_move(20, LEG_BL);
-		delay(d_time);
+		delay(50);
 		//足を下げる
 		servo_move(0 + stretch_param, LEG_UP1);
-		delay(d_time);
-		//動き終わるまでディレイ
 		delay(d_time);
     }
 	else			//ステップ2
 	{
 		//足を上げる
 		servo_move(-40 + stretch_param, LEG_UP2);
-		delay(d_time);
+		delay(50);
 		//足を後ろに出す
 		servo_move(0, LEG_CR);
 		servo_move(0, LEG_FL);
 		servo_move(0, LEG_BL);
-		delay(d_time);
 		//足を前に出す
 		servo_move(0, LEG_CL);
 		servo_move(0, LEG_FR);
 		servo_move(0, LEG_BR);
-		delay(d_time);
+		delay(50);
 
 		//足を後ろに出す
 		servo_move(20, LEG_CR);
 		servo_move(-20, LEG_FL);
 		servo_move(-20, LEG_BL);
-		delay(d_time);
+		delay(50);
 		//足を前に出す
 		servo_move(20, LEG_CL);
 		servo_move(-20, LEG_FR);
 		servo_move(-20, LEG_BR);
-		delay(d_time);
+		delay(50);
 		//足を下げる
 		servo_move(0 + stretch_param, LEG_UP2);
 		delay(d_time);
-		//動き終わるまでディレイ
-		delay(d_time);
-    
 	}
 	if(F_FLG == 0)  F_FLG = 1;
 	else            F_FLG = 0;
@@ -183,66 +176,60 @@ void back()
     {
 		//足を上げる
 		servo_move(-40 + stretch_param, LEG_UP1);
-		delay(d_time);
+		delay(50);
 		//足を前に出す
 		servo_move(0, LEG_CL);
 		servo_move(0, LEG_FR);
 		servo_move(0, LEG_BR);
-		delay(d_time);
+		delay(50);
 		//足を後ろに下げる
 		servo_move(0, LEG_CR);
 		servo_move(0, LEG_FL);
 		servo_move(0, LEG_BL);
-		delay(d_time);
-
+		delay(50);
 
 		//足を前に出す
 		servo_move(20, LEG_CL);
 		servo_move(-20, LEG_FR);
 		servo_move(-20, LEG_BR);
-		delay(d_time);
+		delay(50);
 		//足を後ろに下げる
 		servo_move(20, LEG_CR);
 		servo_move(-20, LEG_FL);
 		servo_move(-20, LEG_BL);
+		delay(50);
 		//足を下げる
 		servo_move(0 + stretch_param, LEG_UP1);
-		delay(d_time);
-
 		delay(d_time);
     }
 	else			//ステップ2
 	{
 		//足を上げる
 		servo_move(-40 + stretch_param, LEG_UP2);
-		delay(d_time);
+		delay(50);
 		//足を前に出す
 		servo_move(0, LEG_CR);
 		servo_move(0, LEG_FL);
 		servo_move(0, LEG_BL);
-		delay(d_time);
+		delay(50);
 		//足を後ろに下げる
 		servo_move(0, LEG_CL);
 		servo_move(0, LEG_FR);
 		servo_move(0, LEG_BR);
-		delay(d_time);
+		delay(50);
 
-		//足を下げる
-		servo_move(0 + stretch_param, LEG_UP2);
-		delay(d_time);
 		//足を前に出す
 		servo_move(-20, LEG_CR);
 		servo_move(20, LEG_FL);
 		servo_move(20, LEG_BL);
-		delay(d_time);
+		delay(50);
 		//足を後ろに下げる
 		servo_move(-20, LEG_CL);
 		servo_move(20, LEG_FR);
 		servo_move(20, LEG_BR);
+		delay(50);
 		//足を下げる
-		servo_move(0 + stretch_param, LEG_UP1);
-		delay(d_time);
-		//動き終わるまでディレイ
+		servo_move(0 + stretch_param, LEG_UP2);
 		delay(d_time);
     }
 
