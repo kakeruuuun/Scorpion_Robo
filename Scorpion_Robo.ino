@@ -23,36 +23,7 @@ void setup() {
         while(1);
     }
     servo_init();
-	pwm_test();
-}
-
-void pwm_test()
-{
-	servo_move(0, LEG_UP1);
-	delay(1000);
-	servo_move(0, LEG_UP2);
-	delay(1000);
-	servo_move(0, LEG_FL);
-	servo_move(0, LEG_FR);
-	delay(500);
-	servo_move(0, LEG_CL);
-	servo_move(0, LEG_CR);
-	delay(500);
-	servo_move(0, LEG_BL);
-	servo_move(0, LEG_BR);
-	delay(500);
-
-	/*servo_move(0, TAIL_1);
-	servo_move(0, TAIL_2);
-	delay(500);
-	servo_move(0, SCISSORS_L1);
-	servo_move(0, SCISSORS_L2);
-	delay(500);
-	servo_move(0, SCISSORS_R1);
-	servo_move(0, SCISSORS_R2);
-	delay(500);
-	*/
-	delay(1000);
+	default_pos();
 }
 
 void loop() {
@@ -77,6 +48,7 @@ void loop() {
 			stretch(2);
 			break;
 		case NEUTRAL :
+			defalt_pos();
 			udp.begin(localPort);	//udpバッファを破棄するために必要
 			break;
         case 0 :
