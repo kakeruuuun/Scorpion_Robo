@@ -12,7 +12,7 @@
 #include "MyServo.h"
 
 int angle[19] = {0};
-char param[READ_SIZE];
+char param[READ_SIZE] = {'0', '0'};
 int pwm_sw_val;
 
 void pwm_test();
@@ -20,7 +20,7 @@ void pwm_test();
 void setup() {
     Serial.begin(115200);
     //サーボモータ初期化
-    if(udp_init(CL_MODE) != 0)
+    if(udp_init(AP_MODE) != 0)
     {
         Serial.println("connection failed...");
         while(1);
