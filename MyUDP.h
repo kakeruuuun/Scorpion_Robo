@@ -12,7 +12,7 @@
 const int localPort  = 10000;           // local ポート番号
 const int remotePort = 10001;           // remoteポート番号
 
-const IPAddress ap_ip(192, 168, 32, 1);   // IPアドレス(ゲートウェイも兼ねる)
+const IPAddress ap_ip(192, 168, 30, 1);   // IPアドレス(ゲートウェイも兼ねる)
 const IPAddress subnet(255, 255, 255, 0); // サブネットマスク
 const IPAddress cl_ip(192, 168, 42, 101);      // クライアントモード時のIPアドレス
 const IPAddress cl_gateway(192, 168, 42, 1);      // クライアントモード時のゲートウェイ
@@ -72,16 +72,19 @@ int udp_init(int md)
 void udp_rw(char read_buf[]) {
     int PackektSize;
     int i;
-	while(PackektSize = udp.parsePacket())	//パケットの最後になるまでループさせる
+	while(PackektSize = udp.parsePacket())	//パケットが送られてくるまでループ
 	{
-		Serial.println("受信");
+		remoteIP = udp.remoteIP();
+		udp.beginPacket(remoteIP, remotePort);
 		udp.read(read_buf, READ_SIZE);
+
+		for(i = 0; i < READ_SIZE;i++){
+			udp.write(read_buf[i]);
+			udp.flush();
+		}
+		udp.endPacket();
+		//Serial.print("size:");
+		//Serial.println(PackektSize);
+		//break;
 	}
-	//remoteIP = udp.remoteIP();
-	//udp.beginPacket(remoteIP, remotePort);
-	//for(i = 0; i < READ_SIZE;i++){
-	//	udp.write(read_buf[i]);
-	//	udp.flush();
-	//}
-	udp.endPacket();
 }
