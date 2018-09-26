@@ -3,12 +3,12 @@
 #define LEDC_SERVO_FREQ     50
 #define SERVO_MIN_WIDTH_MS  0.6
 #define SERVO_MAX_WIDTH_MS  2.4
-#define DEF_FL -10
-#define DEF_FR 10
+#define DEF_FL 20
+#define DEF_FR -20
 #define DEF_CL 0
 #define DEF_CR 0
-#define DEF_BL 10
-#define DEF_BR -10
+#define DEF_BL -20
+#define DEF_BR 20
 
 static int F_FLG = 0;
 static int stretch_param = 0;
@@ -252,7 +252,7 @@ void default_pos()
 	servo_move(stretch_param, LEG_UP2);
 	servo_move(DEF_FL, LEG_FL);
 	servo_move(DEF_FR,  LEG_FR);
-	servo_move(DEF_CL), LEG_CL);
+	servo_move(DEF_CL, LEG_CL);
 	servo_move(DEF_CR, LEG_CR);
 	servo_move(DEF_BL,  LEG_BL);
 	servo_move(DEF_BR, LEG_BR);

@@ -48,7 +48,7 @@ void loop() {
 			stretch(2);
 			break;
 		case NEUTRAL :
-			defalt_pos();
+			default_pos();
 			udp.begin(localPort);	//udpバッファを破棄するために必要
 			break;
         case 0 :
