@@ -1,6 +1,8 @@
 // motion macro
-#define LEG_FORWARD 	'F'
-#define LEG_BACK    	'B'
+#define LEG_FORWARD		'F'
+#define LEG_BACK		'B'
+#define TURN_L			'L'
+#define TURN_R			'R'
 #define STRETCH_UP		'U'
 #define STRETCH_DOWN	'D'
 #define NEUTRAL			'N'
@@ -10,6 +12,7 @@
 #include "MyServo.h"
 
 int angle[19] = {0};
+char param[READ_SIZE];
 int pwm_sw_val;
 
 void pwm_test();
@@ -27,7 +30,6 @@ void setup() {
 }
 
 void loop() {
-    char param[READ_SIZE];
     udp_rw(param);
 	//パラメータを16進数で表示する
 	Serial.print("param:");
@@ -41,6 +43,12 @@ void loop() {
 		case LEG_BACK :
 			back();
             break;
+		case TURN_L :
+			turn_left();
+			break;
+		case TURN_R :
+			turn_right();
+			break;
 		case STRETCH_UP :
 			stretch(1);
 			break;
@@ -49,7 +57,7 @@ void loop() {
 			break;
 		case NEUTRAL :
 			default_pos();
-			udp.begin(localPort);	//udpバッファを破棄するために必要
+			param[0] = '0';
 			break;
         case 0 :
             break;
