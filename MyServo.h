@@ -11,6 +11,7 @@
 #define DEF_BR 20
 
 static int F_FLG = 0;
+static int T_FLG = 0;
 static int stretch_param = 0;
 static const int d_time = 200;
 static const int s_delay = 60;
@@ -233,6 +234,127 @@ void back()
 	if(F_FLG == 0)  F_FLG = 1;
 	else            F_FLG = 0;
 }
+void turn_left()
+{
+    if(T_FLG == 0)	//ステップ1
+    {
+		//足を上げる
+		servo_move(-40 + stretch_param, LEG_UP1);
+		//足を前に出す
+		servo_move(DEF_CL, LEG_CL);
+		servo_move(DEF_FR, LEG_FR);
+		servo_move(DEF_BR, LEG_BR);
+		//足を後ろに下げる
+		servo_move(DEF_CR, LEG_CR);
+		servo_move(DEF_FL, LEG_FL);
+		servo_move(DEF_BL, LEG_BL);
+		delay(50);
+
+		//足を前に出す
+		servo_move(10 + DEF_CL, LEG_CL);
+		servo_move(10 + DEF_FR, LEG_FR);
+		servo_move(10 + DEF_BR, LEG_BR);
+		//足を後ろに下げる
+		servo_move(-10 + DEF_CR, LEG_CR);
+		servo_move(-10 + DEF_FL, LEG_FL);
+		servo_move(-10 + DEF_BL, LEG_BL);
+		//足を下げる
+		servo_move(0 + stretch_param, LEG_UP1);
+		delay(d_time);
+    }
+	else			//ステップ2
+	{
+		//足を上げる
+		servo_move(-40 + stretch_param, LEG_UP2);
+		delay(50);
+		//足を前に出す
+		servo_move(DEF_CR, LEG_CR);
+		servo_move(DEF_FL, LEG_FL);
+		servo_move(DEF_BL, LEG_BL);
+		//足を後ろに下げる
+		servo_move(DEF_CL, LEG_CL);
+		servo_move(DEF_FR, LEG_FR);
+		servo_move(DEF_BR, LEG_BR);
+		delay(50);
+
+		//足を前に出す
+		servo_move(10 + DEF_CR, LEG_CR);
+		servo_move(10 + DEF_FL, LEG_FL);
+		servo_move(10 + DEF_BL, LEG_BL);
+		delay(50);
+		//足を後ろに下げる
+		servo_move(-10 + DEF_CL, LEG_CL);
+		servo_move(-10 + DEF_FR, LEG_FR);
+		servo_move(-10 + DEF_BR, LEG_BR);
+		//足を下げる
+		servo_move(0 + stretch_param, LEG_UP2);
+		delay(d_time);
+    }
+
+	if(T_FLG == 0)  T_FLG = 1;
+	else            T_FLG = 0;
+}
+
+void turn_right()
+{
+    if(T_FLG == 1)	//ステップ1
+    {
+		//足を上げる
+		servo_move(-40 + stretch_param, LEG_UP1);
+		//足を前に出す
+		servo_move(DEF_CL, LEG_CL);
+		servo_move(DEF_FR, LEG_FR);
+		servo_move(DEF_BR, LEG_BR);
+		//足を後ろに下げる
+		servo_move(DEF_CR, LEG_CR);
+		servo_move(DEF_FL, LEG_FL);
+		servo_move(DEF_BL, LEG_BL);
+		delay(50);
+
+		//足を前に出す
+		servo_move(-10 + DEF_CL, LEG_CL);
+		servo_move(-10 + DEF_FR, LEG_FR);
+		servo_move(-10 + DEF_BR, LEG_BR);
+		//足を後ろに下げる
+		servo_move(10 + DEF_CR, LEG_CR);
+		servo_move(10 + DEF_FL, LEG_FL);
+		servo_move(10 + DEF_BL, LEG_BL);
+		//足を下げる
+		servo_move(0 + stretch_param, LEG_UP1);
+		delay(d_time);
+    }
+	else			//ステップ2
+	{
+		//足を上げる
+		servo_move(-40 + stretch_param, LEG_UP2);
+		delay(50);
+		//足を前に出す
+		servo_move(DEF_CR, LEG_CR);
+		servo_move(DEF_FL, LEG_FL);
+		servo_move(DEF_BL, LEG_BL);
+		//足を後ろに下げる
+		servo_move(DEF_CL, LEG_CL);
+		servo_move(DEF_FR, LEG_FR);
+		servo_move(DEF_BR, LEG_BR);
+		delay(50);
+
+		//足を前に出す
+		servo_move(-10 + DEF_CR, LEG_CR);
+		servo_move(-10 + DEF_FL, LEG_FL);
+		servo_move(-10 + DEF_BL, LEG_BL);
+		delay(50);
+		//足を後ろに下げる
+		servo_move(10 + DEF_CL, LEG_CL);
+		servo_move(10 + DEF_FR, LEG_FR);
+		servo_move(10 + DEF_BR, LEG_BR);
+		//足を下げる
+		servo_move(0 + stretch_param, LEG_UP2);
+		delay(d_time);
+    }
+
+	if(T_FLG == 0)  T_FLG = 1;
+	else            T_FLG = 0;
+}
 
 
 void stretch(int md)
@@ -248,12 +370,19 @@ void stretch(int md)
 
 void default_pos()
 {
-	servo_move(stretch_param, LEG_UP1);
-	servo_move(stretch_param, LEG_UP2);
-	servo_move(DEF_FL, LEG_FL);
-	servo_move(DEF_FR,  LEG_FR);
-	servo_move(DEF_CL, LEG_CL);
+	servo_move(stretch_param - 40, LEG_UP1);
 	servo_move(DEF_CR, LEG_CR);
 	servo_move(DEF_BL,  LEG_BL);
+	servo_move(DEF_FL, LEG_FL);
+	delay(100);
+	servo_move(stretch_param, LEG_UP1);
+	delay(100);
+
+	servo_move(stretch_param - 40, LEG_UP2);
+	servo_move(DEF_FR,  LEG_FR);
+	servo_move(DEF_CL, LEG_CL);
 	servo_move(DEF_BR, LEG_BR);
+	delay(100);
+	servo_move(stretch_param, LEG_UP2);
+	delay(100);
 }
