@@ -1,103 +1,62 @@
 // servo parameter
 // サーボ信号の１サイクル 50Hz:20ms
 #define LEDC_SERVO_FREQ     50
-
 #define SERVO_MIN_WIDTH_MS  0.6
 #define SERVO_MAX_WIDTH_MS  2.4
+#define DEF_FL 20
+#define DEF_FR -20
+#define DEF_CL 0
+#define DEF_CR 0
+#define DEF_BL -20
+#define DEF_BR 20
 
+static int F_FLG = 0;
+static int T_FLG = 0;
+static int stretch_param = 0;
+static const int d_time = 200;
+static const int s_delay = 60;
 // 端子番号 SERVO[0-19]
-const int SERVO[] = {15, //0
-                      2,  //1
-                      0,  //2
-                      4,  //3
-                      16, //4
-                      17, //5
-                      5,  //6
-                      18, //7
-                      19, //8
-                      21, //9
-                      22, //10
-                      23, //11
-                      32, //12
-                      33, //13
-                      25, //14
-                      26, //15
-                      27, //16
-                      14, //17
-                      12, //18
-                      13};//19
+const int SERVO[] = {19, //0 LEGUP1
+                     14, //1 LEGUP1
+                      4, //2 LEGUP1
+                     26, //3 LEGUP2
+                      5, //4 LEGUP2
+                     25, //5 LEGUP2
+                     27, //6 LEGFL
+                     12, //7 LEGCL
+                     13, //8 LEGBL
+                     18, //9 LEGFR
+                     17, //10 LEGCR
+                     16, //11 LEGBR
+                     15, //12 TAIL1
+                      2, //13 TAIL2
+                     33, //14 SCISSORS_L1
+                     32, //15 SCISSORS_L2
+                     22, //16 SCISSORS_R1
+                     23, //17 SCISSORS_R2
+                     21, //18 reserve
+                     0};//19 reserve
 
 // pwmチャンネル番号　0 - 15
-#define LEDC_CHANNEL_0      0
-#define LEDC_CHANNEL_1      1
-#define LEDC_CHANNEL_2      2
-#define LEDC_CHANNEL_3      3
-#define LEDC_CHANNEL_4      4
-#define LEDC_CHANNEL_5      5
-#define LEDC_CHANNEL_6      6
-#define LEDC_CHANNEL_7      7
-#define LEDC_CHANNEL_8      8
-#define LEDC_CHANNEL_9      9
-#define LEDC_CHANNEL_10     10
-#define LEDC_CHANNEL_11     11
-#define LEDC_CHANNEL_12     12
-#define LEDC_CHANNEL_13     13
-#define LEDC_CHANNEL_14     14
-#define LEDC_CHANNEL_15     15
+#define LEG_UP1			0
+#define LEG_UP2			1
+#define LEG_FL      	2
+#define LEG_CL      	3
+#define LEG_BL      	4
+#define LEG_FR      	5
+#define LEG_CR      	6
+#define LEG_BR      	7
+#define TAIL_1      	8
+#define TAIL_2      	9
+#define SCISSORS_L1     10
+#define SCISSORS_L2     11
+#define SCISSORS_R1     12
+#define SCISSORS_R2     13
+#define RESERVE1     	14
+#define RESERVE2     	15
 
 // 分解能 16bit
 #define LEDC_TIMER_16_BIT   16
-
-enum Servo_num {
-    FRONT_LEG_R_1 ,
-    FRONT_LEG_R_2 ,
-    FRONT_LEG_L_1 ,
-    FRONT_LEG_L_2 ,
-    CENTER_LEG_R_1 ,
-    CENTER_LEG_R_2 ,
-    CENTER_LEG_L_1 ,
-    CENTER_LEG_L_2 ,
-    REAR_LEG_R_1 ,
-    REAR_LEG_R_2 ,
-    REAR_LEG_L_1 ,
-    REAR_LEG_L_2 ,
-
-    SCISSORS_R_1 ,
-    SCISSORS_R_2 ,
-    SCISSORS_R_3 ,
-    SCISSORS_L_1 ,
-    SCISSORS_L_2 ,
-    SCISSORS_L_3 ,
-
-    TAIL_1 ,
-    TAIL_2
-};
-
-void servo_init()
-{
-    // RC SERVOの初期化
-    ledcSetup(LEDC_CHANNEL_0, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_1, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_2, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_3, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_4, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_5, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_6, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_7, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_8, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_9, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_10, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_11, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_12, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_13, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_14, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
-    ledcSetup(LEDC_CHANNEL_15, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
-    ledcAttachPin(SERVO[16], LEDC_CHANNEL_3) ; // CH3をRC SERVOに
-
-    // RC SERVOの初期化
-    ledcSetup(LEDC_CHANNEL_4, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
-    delay(1000);
-}
 
 int servo_pwm_count(int v)
 {
@@ -107,18 +66,323 @@ int servo_pwm_count(int v)
 
 void servo_move(int param, int ch)
 {
-    ledcWrite(ch, servo_pwm_count(param)) ; 
+    ledcWrite(ch, servo_pwm_count(param));
+	delay(s_delay);
 }
 
-void servo_mdselect(int mode)
+void servo_init()
 {
-    switch(mode)
+    // RC SERVOの初期化
+    ledcSetup(LEG_UP1, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); 	// 16ビット精度で制御
+    ledcSetup(LEG_UP2, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); 	// 16ビット精度で制御
+    ledcSetup(LEG_FL, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  	// 16ビット精度で制御
+    ledcSetup(LEG_CL, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  	// 16ビット精度で制御
+    ledcSetup(LEG_BL, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  	// 16ビット精度で制御
+    ledcSetup(LEG_FR, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  	// 16ビット精度で制御
+    ledcSetup(LEG_CR, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  	// 16ビット精度で制御
+    ledcSetup(LEG_BR, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  	// 16ビット精度で制御
+    ledcSetup(TAIL_1, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  	// 16ビット精度で制御
+    ledcSetup(TAIL_2, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT);  	// 16ビット精度で制御
+    ledcSetup(SCISSORS_L1, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
+    ledcSetup(SCISSORS_L2, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
+    ledcSetup(SCISSORS_R1, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
+    ledcSetup(SCISSORS_R2, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); // 16ビット精度で制御
+    ledcSetup(RESERVE1, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); 	// 16ビット精度で制御
+    ledcSetup(RESERVE2, LEDC_SERVO_FREQ, LEDC_TIMER_16_BIT); 	// 16ビット精度で制御
+    delay(1000);
+	ledcAttachPin(SERVO[0], LEG_UP1) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[1], LEG_UP1) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[2], LEG_UP1) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[3], LEG_UP2) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[4], LEG_UP2) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[5], LEG_UP2) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[6], LEG_FL) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[7], LEG_CL) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[8], LEG_BL) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[9], LEG_FR) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[10], LEG_CR) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[11], LEG_BR) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[12], TAIL_1) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[13], TAIL_2) ; 	// CH3をRC SERVOに
+    ledcAttachPin(SERVO[14], SCISSORS_L1) ; // CH3をRC SERVOに
+    ledcAttachPin(SERVO[15], SCISSORS_L2) ; // CH3をRC SERVOに
+    ledcAttachPin(SERVO[16], SCISSORS_R1) ; // CH3をRC SERVOに
+    ledcAttachPin(SERVO[17], SCISSORS_R2) ; // CH3をRC SERVOに
+	delay(1000);
+
+}
+
+void forward()
+{
+    if(F_FLG == 0)	//ステップ1
     {
-        case 0 : 
-            ledcAttachPin(SERVO[16], LEDC_CHANNEL_3) ; // CH3をRC SERVOに
-            ledcAttachPin(SERVO[15], LEDC_CHANNEL_4) ; // CH4をRC SERVOに
-            break;
-       default :
-            break;
+		//足を上げる
+		servo_move(-40 + stretch_param, LEG_UP1);
+		delay(50);
+		//足を後ろに出す
+		servo_move(DEF_CL, LEG_CL);
+		servo_move(DEF_FR, LEG_FR);
+		servo_move(DEF_BR, LEG_BR);
+		delay(50);
+		//足を前に出す
+		servo_move(DEF_CR, LEG_CR);
+		servo_move(DEF_FL, LEG_FL);
+		servo_move(DEF_BL, LEG_BL);
+		delay(50);
+
+		//足を後ろに出す
+		servo_move(-10 + DEF_CL, LEG_CL);
+		servo_move(10 + DEF_FR, LEG_FR);
+		servo_move(10 + DEF_BR, LEG_BR);
+		delay(50);
+		//足を前に出す
+		servo_move(-10 + DEF_CR, LEG_CR);
+		servo_move(10 + DEF_FL, LEG_FL);
+		servo_move(10 + DEF_BL, LEG_BL);
+		delay(50);
+		//足を下げる
+		servo_move(0 + stretch_param, LEG_UP1);
+		delay(d_time);
     }
+	else			//ステップ2
+	{
+		//足を上げる
+		servo_move(-40 + stretch_param, LEG_UP2);
+		//足を後ろに出す
+		servo_move(DEF_CR, LEG_CR);
+		servo_move(DEF_FL, LEG_FL);
+		servo_move(DEF_BL, LEG_BL);
+		//足を前に出す
+		servo_move(DEF_CL, LEG_CL);
+		servo_move(DEF_FR, LEG_FR);
+		servo_move(DEF_BR, LEG_BR);
+		delay(50);
+
+		//足を後ろに出す
+		servo_move(10 + DEF_CR, LEG_CR);
+		servo_move(-10 + DEF_FL, LEG_FL);
+		servo_move(-10 + DEF_BL, LEG_BL);
+		//足を前に出す
+		servo_move(10 + DEF_CL, LEG_CL);
+		servo_move(-10 + DEF_FR, LEG_FR);
+		servo_move(-10 + DEF_BR, LEG_BR);
+		//足を下げる
+		servo_move(0 + stretch_param, LEG_UP2);
+		delay(d_time);
+	}
+	if(F_FLG == 0)  F_FLG = 1;
+	else            F_FLG = 0;
+}
+
+void back()
+{
+    if(F_FLG == 1)	//ステップ1
+    {
+		//足を上げる
+		servo_move(-40 + stretch_param, LEG_UP1);
+		//足を前に出す
+		servo_move(DEF_CL, LEG_CL);
+		servo_move(DEF_FR, LEG_FR);
+		servo_move(DEF_BR, LEG_BR);
+		//足を後ろに下げる
+		servo_move(DEF_CR, LEG_CR);
+		servo_move(DEF_FL, LEG_FL);
+		servo_move(DEF_BL, LEG_BL);
+		delay(50);
+
+		//足を前に出す
+		servo_move(10 + DEF_CL, LEG_CL);
+		servo_move(-10 + DEF_FR, LEG_FR);
+		servo_move(-10 + DEF_BR, LEG_BR);
+		//足を後ろに下げる
+		servo_move(10 + DEF_CR, LEG_CR);
+		servo_move(-10 + DEF_FL, LEG_FL);
+		servo_move(-10 + DEF_BL, LEG_BL);
+		//足を下げる
+		servo_move(0 + stretch_param, LEG_UP1);
+		delay(d_time);
+    }
+	else			//ステップ2
+	{
+		//足を上げる
+		servo_move(-40 + stretch_param, LEG_UP2);
+		delay(50);
+		//足を前に出す
+		servo_move(DEF_CR, LEG_CR);
+		servo_move(DEF_FL, LEG_FL);
+		servo_move(DEF_BL, LEG_BL);
+		//足を後ろに下げる
+		servo_move(DEF_CL, LEG_CL);
+		servo_move(DEF_FR, LEG_FR);
+		servo_move(DEF_BR, LEG_BR);
+		delay(50);
+
+		//足を前に出す
+		servo_move(-10 + DEF_CR, LEG_CR);
+		servo_move(10 + DEF_FL, LEG_FL);
+		servo_move(10 + DEF_BL, LEG_BL);
+		delay(50);
+		//足を後ろに下げる
+		servo_move(-10 + DEF_CL, LEG_CL);
+		servo_move(10 + DEF_FR, LEG_FR);
+		servo_move(10 + DEF_BR, LEG_BR);
+		//足を下げる
+		servo_move(0 + stretch_param, LEG_UP2);
+		delay(d_time);
+    }
+
+	if(F_FLG == 0)  F_FLG = 1;
+	else            F_FLG = 0;
+}
+void turn_left()
+{
+    if(T_FLG == 0)	//ステップ1
+    {
+		//足を上げる
+		servo_move(-40 + stretch_param, LEG_UP1);
+		//足を前に出す
+		servo_move(DEF_CL, LEG_CL);
+		servo_move(DEF_FR, LEG_FR);
+		servo_move(DEF_BR, LEG_BR);
+		//足を後ろに下げる
+		servo_move(DEF_CR, LEG_CR);
+		servo_move(DEF_FL, LEG_FL);
+		servo_move(DEF_BL, LEG_BL);
+		delay(50);
+
+		//足を前に出す
+		servo_move(10 + DEF_CL, LEG_CL);
+		servo_move(10 + DEF_FR, LEG_FR);
+		servo_move(10 + DEF_BR, LEG_BR);
+		//足を後ろに下げる
+		servo_move(-10 + DEF_CR, LEG_CR);
+		servo_move(-10 + DEF_FL, LEG_FL);
+		servo_move(-10 + DEF_BL, LEG_BL);
+		//足を下げる
+		servo_move(0 + stretch_param, LEG_UP1);
+		delay(d_time);
+    }
+	else			//ステップ2
+	{
+		//足を上げる
+		servo_move(-40 + stretch_param, LEG_UP2);
+		delay(50);
+		//足を前に出す
+		servo_move(DEF_CR, LEG_CR);
+		servo_move(DEF_FL, LEG_FL);
+		servo_move(DEF_BL, LEG_BL);
+		//足を後ろに下げる
+		servo_move(DEF_CL, LEG_CL);
+		servo_move(DEF_FR, LEG_FR);
+		servo_move(DEF_BR, LEG_BR);
+		delay(50);
+
+		//足を前に出す
+		servo_move(10 + DEF_CR, LEG_CR);
+		servo_move(10 + DEF_FL, LEG_FL);
+		servo_move(10 + DEF_BL, LEG_BL);
+		delay(50);
+		//足を後ろに下げる
+		servo_move(-10 + DEF_CL, LEG_CL);
+		servo_move(-10 + DEF_FR, LEG_FR);
+		servo_move(-10 + DEF_BR, LEG_BR);
+		//足を下げる
+		servo_move(0 + stretch_param, LEG_UP2);
+		delay(d_time);
+    }
+
+	if(T_FLG == 0)  T_FLG = 1;
+	else            T_FLG = 0;
+}
+
+void turn_right()
+{
+    if(T_FLG == 1)	//ステップ1
+    {
+		//足を上げる
+		servo_move(-40 + stretch_param, LEG_UP1);
+		//足を前に出す
+		servo_move(DEF_CL, LEG_CL);
+		servo_move(DEF_FR, LEG_FR);
+		servo_move(DEF_BR, LEG_BR);
+		//足を後ろに下げる
+		servo_move(DEF_CR, LEG_CR);
+		servo_move(DEF_FL, LEG_FL);
+		servo_move(DEF_BL, LEG_BL);
+		delay(50);
+
+		//足を前に出す
+		servo_move(-10 + DEF_CL, LEG_CL);
+		servo_move(-10 + DEF_FR, LEG_FR);
+		servo_move(-10 + DEF_BR, LEG_BR);
+		//足を後ろに下げる
+		servo_move(10 + DEF_CR, LEG_CR);
+		servo_move(10 + DEF_FL, LEG_FL);
+		servo_move(10 + DEF_BL, LEG_BL);
+		//足を下げる
+		servo_move(0 + stretch_param, LEG_UP1);
+		delay(d_time);
+    }
+	else			//ステップ2
+	{
+		//足を上げる
+		servo_move(-40 + stretch_param, LEG_UP2);
+		delay(50);
+		//足を前に出す
+		servo_move(DEF_CR, LEG_CR);
+		servo_move(DEF_FL, LEG_FL);
+		servo_move(DEF_BL, LEG_BL);
+		//足を後ろに下げる
+		servo_move(DEF_CL, LEG_CL);
+		servo_move(DEF_FR, LEG_FR);
+		servo_move(DEF_BR, LEG_BR);
+		delay(50);
+
+		//足を前に出す
+		servo_move(-10 + DEF_CR, LEG_CR);
+		servo_move(-10 + DEF_FL, LEG_FL);
+		servo_move(-10 + DEF_BL, LEG_BL);
+		delay(50);
+		//足を後ろに下げる
+		servo_move(10 + DEF_CL, LEG_CL);
+		servo_move(10 + DEF_FR, LEG_FR);
+		servo_move(10 + DEF_BR, LEG_BR);
+		//足を下げる
+		servo_move(0 + stretch_param, LEG_UP2);
+		delay(d_time);
+    }
+
+	if(T_FLG == 0)  T_FLG = 1;
+	else            T_FLG = 0;
+}
+
+
+void stretch(int md)
+{
+	if(md == 1)	stretch_param += 1;
+	else		stretch_param -= 1;
+
+	if(stretch_param > 40)			stretch_param = 40;
+	else if(stretch_param < -20)	stretch_param = -20;
+	servo_move(0 + stretch_param, LEG_UP1);
+	servo_move(0 + stretch_param, LEG_UP2);
+}
+
+void default_pos()
+{
+	servo_move(stretch_param - 40, LEG_UP1);
+	servo_move(DEF_CR, LEG_CR);
+	servo_move(DEF_BL,  LEG_BL);
+	servo_move(DEF_FL, LEG_FL);
+	delay(100);
+	servo_move(stretch_param, LEG_UP1);
+	delay(100);
+
+	servo_move(stretch_param - 40, LEG_UP2);
+	servo_move(DEF_FR,  LEG_FR);
+	servo_move(DEF_CL, LEG_CL);
+	servo_move(DEF_BR, LEG_BR);
+	delay(100);
+	servo_move(stretch_param, LEG_UP2);
+	delay(100);
 }
